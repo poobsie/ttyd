@@ -7,7 +7,7 @@
 extern GlobalWork* gp;
 
 static seq_e3_work work;
-static seq_e3_work* wp;
+static seq_e3_work* wp = &work;
 
 //local prototypes
 void alarm_handler(OSAlarm* alarm, OSContext* context);
@@ -34,7 +34,7 @@ void seq_e3Init(SequenceWork* work) {
 	psndStopAllFadeOut();
 	psndBGMOn(0x200, "BGM_FILE_MENU1");
 	work->state = 0;
-	//animGroupBaseAsync("OFF_d_meku", 0, 0);
+	animGroupBaseAsync("OFF_d_meku", 0, 0);
 }
 
 void seq_e3Exit(SequenceWork* work) {

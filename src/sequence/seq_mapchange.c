@@ -78,29 +78,31 @@ void seq_mapChangeExit(SequenceWork* work) {
 }
 
 void seq_mapChangeInit(SequenceWork* work) {
-	strcpy(_next_area, "");
-	strcpy(_next_map, "");
-	strcpy(_next_bero, "");
-	if (work->mapName) {
-		strncpy(_next_area, work->mapName, 3);
-		strncpy(_next_map, work->mapName, 0x20);
-	}
-	if (work->beroName) {
-		strncpy(_next_bero, work->beroName, 0x20);
-	}
-	psndENVOff(0x200);
-	psndENVOff(0x201);
-	if (strcmp(gp->currentMapName, "") &&
-		strcmp(gp->currentMapName, "gor_01") &&
-		strcmp(_next_map, "gor_01"))
-	{
-		bdsw->field_0x114 |= 1;
-	}
-	else if (!strcmp(_next_map, "gor_01") &&
-			 bdsw->field_0x114 & 1)
-	{
-		badgeShop_bargainGeneration();
-		badgeShop_bottakuruGeneration();
-		bdsw->field_0x114 &= 0xFFFE;
-	}
+        int cmp1;
+        int cmp2;
+        int cmp3;
+        strcpy(_next_area, "");
+        strcpy(_next_map, "");
+        strcpy(_next_bero, "");
+        if (work->mapName) {
+                strncpy(_next_area, work->mapName, 3);
+                strncpy(_next_map, work->mapName, 0x20);
+        }
+        if (work->beroName) {
+                strncpy(_next_bero, work->beroName, 0x20);
+        }
+        psndENVOff(0x200);
+        psndENVOff(0x201);
+        cmp1 = strcmp(gp->currentMapName, "");
+        cmp2 = strcmp(gp->currentMapName, "gor_01");
+        cmp3 = strcmp(_next_map, "gor_01");
+        if (cmp1 && cmp2 && cmp3) {
+                bdsw->field_0x114 |= 1;
+        }
+        else if (!cmp3 && (bdsw->field_0x114 & 1)) {
+                badgeShop_bargainGeneration();
+                badgeShop_bottakuruGeneration();
+                bdsw->field_0x114 &= 0xFFFE;
+        }
 }
+

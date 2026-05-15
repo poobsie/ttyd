@@ -64,5 +64,6 @@ SequenceType seqGetNextSeq(void) {
 }
 
 BOOL seqCheckSeq(void) {
-	return next_seq != now_seq;
+        return now_seq != next_seq;
+
 }

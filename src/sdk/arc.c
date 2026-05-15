@@ -86,6 +86,6 @@ u32 ARCGetLength(ARCFileInfo* info) {
 	return 0;
 }
 
-void ARCClose(void) {
+void ARCClose(ARCFileInfo* info) {
 
 }
