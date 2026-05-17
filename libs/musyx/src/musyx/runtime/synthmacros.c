@@ -11,6 +11,14 @@
 #include <float.h>
 #include <string.h>
 
+float float_4096_80422be8 __attribute__((section(".sdata2"))) = 4096.f;
+float float_1p1921Eneg07_80422bec __attribute__((section(".sdata2"))) = 1.1920928955078125e-07f;
+float float_0p0078125_80422bf0 __attribute__((section(".sdata2"))) = 0.0078125f;
+double double_to_int_mask_80422bf8 __attribute__((section(".sdata2"))) = 4503599627370496.0;
+double double_to_int_80422c00 __attribute__((section(".sdata2"))) = 4503599627370496.0 + 2147483648.0;
+float float_1023_80422c08 __attribute__((section(".sdata2"))) = 1023.f;
+float float_1_80422c0c __attribute__((section(".sdata2"))) = 1.f;
+
 static u8 DebugMacroSteps;
 
 static SYNTH_VOICE* macActiveMacroRoot;
@@ -592,8 +600,8 @@ static void DoSetPitch(SYNTH_VOICE* svoice) {
   u32 no;   // r30
   s32 key;  // r25
   u8 oKey;  // r24
-  static u16 kf[13] = {
-      4096, 4339, 4597, 4871, 5160, 5467, 5792, 6137, 6502, 6888, 7298, 7732, 8192,
+  static u16 kf[14] = {
+      4096, 4339, 4597, 4871, 5160, 5467, 5792, 6137, 6502, 6888, 7298, 7732, 8192, 0,
   };
 
   frq = svoice->playFrq & 0xFFFFFF;
@@ -683,7 +691,7 @@ static void mcmdSetADSR(SYNTH_VOICE* svoice, MSTEP* cstep) {
       adsr.data.dls.dtime =
           ((u8*)&adsr_ptr->data.dls.dtime)[0] << 0 | ((u8*)&adsr_ptr->data.dls.dtime)[1] << 8 |
           ((u8*)&adsr_ptr->data.dls.dtime)[2] << 16 | ((u8*)&adsr_ptr->data.dls.dtime)[3] << 24;
-      adsr.data.dls.slevel = 4096.f * sScale;
+      adsr.data.dls.slevel = float_4096_80422be8 * sScale;
       adsr.data.dls.rtime = adsr_ptr->data.dls.rtime >> 8 | adsr_ptr->data.dls.rtime << 8;
       ascale =
           ((u8*)&adsr_ptr->data.dls.ascale)[0] << 0 | ((u8*)&adsr_ptr->data.dls.ascale)[1] << 8 |
@@ -708,7 +716,7 @@ static void mcmdSetADSR(SYNTH_VOICE* svoice, MSTEP* cstep) {
   }
 }
 
-static s32 midi2TimeTab[128] = {
+static s32 midi2TimeTab[129] = {
     0,      10,     20,     30,     40,     50,     60,     70,     80,     90,     100,    110,
     110,    120,    130,    140,    150,    160,    170,    190,    200,    220,    230,    250,
     270,    290,    310,    330,    350,    380,    410,    440,    470,    500,    540,    580,
@@ -719,7 +727,7 @@ static s32 midi2TimeTab[128] = {
     17000,  18000,  19000,  21000,  22000,  24000,  26000,  28000,  30000,  32000,  34000,  37000,
     39000,  42000,  45000,  49000,  50000,  55000,  60000,  65000,  70000,  75000,  80000,  85000,
     90000,  95000,  100000, 105000, 110000, 115000, 120000, 125000, 130000, 135000, 140000, 145000,
-    150000, 155000, 160000, 165000, 170000, 175000, 180000, 0,
+    150000, 155000, 160000, 165000, 170000, 175000, 180000, 0, 0,
 };
 
 static void mcmdSetADSRFromCtrl(SYNTH_VOICE* svoice, MSTEP* cstep) {
@@ -732,7 +740,7 @@ static void mcmdSetADSRFromCtrl(SYNTH_VOICE* svoice, MSTEP* cstep) {
       midi2TimeTab[inpGetMidiCtrl(cstep->para[0] >> 8, svoice->midi, svoice->midiSet) >> 7];
   adsr.data.dls.dtime =
       midi2TimeTab[inpGetMidiCtrl(cstep->para[0] >> 16, svoice->midi, svoice->midiSet) >> 7];
-  adsr.data.dls.slevel = 193 - dspScale2IndexTab[(u32)(1023.f * sScale)];
+  adsr.data.dls.slevel = 193 - dspScale2IndexTab[(u32)(float_1023_80422c08 * sScale)];
   adsr.data.dls.rtime =
       midi2TimeTab[inpGetMidiCtrl(cstep->para[1], svoice->midi, svoice->midiSet) >> 7];
   adsr.data.dls.ascale = -0x80000000;
@@ -1632,11 +1640,11 @@ static void macHandleActive(SYNTH_VOICE* svoice) {
       mcmdSRCModeSelect(svoice, &cstep);
       break;
 #if MUSY_VERSION >= MUSY_VERSION_CHECK(2, 0, 1)
-    case 0x5e:
-      mcmdFilterParameterSelect(svoice, &cstep);
-      break;
     case 0x5f:
       mcmdFilterSwitchSelect(svoice, &cstep);
+      break;
+    case 0x5e:
+      mcmdFilterParameterSelect(svoice, &cstep);
       break;
 #endif
     case 0x60:

@@ -34,7 +34,7 @@ f32 getV60FPS(f32 a1, s64 a2, s64 a3);
 f32 sysFrame2SecFloat(f32 frame);
 s32 sysMsec2Frame(s32 msec);
 f32 sysMsec2FrameFloat(f32 msec);
-void mtxGetRotationElement(Mtx arg0, Mtx arg1, char arg2, char arg3);
+void mtxGetRotationElement(Mtx arg0, Mtx arg1, signed char arg2, signed char arg3);
 s32 LZ77Decode(u8* input, u8* output);
 void* memcpy_as4(void* dest, const void* src, u32 count);
 

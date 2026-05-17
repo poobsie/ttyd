@@ -96,8 +96,8 @@ void DVDMgrMain(void) { //1:1
                 }
             }
             
-            result = DVDRead(&entry->info, entry->address, size, entry->offset + entry->position);
-            if (result == DVD_RESULT_CANCELED) {
+            result = DVDReadPrio(&entry->info, entry->address, size, entry->offset + entry->position, 2);
+            if (result == -3) {
                 entry->status &= ~DVDMGR_READING;
                 entry->status |= DVDMGR_FINISHED;
                 if (entry->callback != NULL) {
@@ -177,7 +177,8 @@ s32 DVDMgrRead(DVDEntry* entry, void* address, u32 size, s32 offset) {
 	entry->status &= ~DVDMGR_FINISHED;
 	entry->callback = NULL;
 	entry->position = 0;
-	while (!(entry->status & DVDMGR_FINISHED)) {
+	for (;;) {
+		if (entry->status & DVDMGR_FINISHED) break;
 		OSYieldThread();
 	}
 	return entry->info.length;

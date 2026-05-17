@@ -109,7 +109,7 @@ static float rsmpTab12khz[512] = {
     0.802215576172f,  0.097503662109f,
 };
 
-const double i2fMagic = 4.503601774854144E15;
+const double double_to_int_80422da0 = 4.503601774854144E15;
 
 #ifdef __MWERKS__
 // clang-format off
@@ -140,8 +140,8 @@ static asm void do_src1(_SND_CHORUS_SRCINFO* src) {
   stw r10, 0x18(sp)
   stw r10, 0x20(sp)
   
-  lis r10, i2fMagic@ha
-  lfd f9, i2fMagic@l(r10)
+  lis r10, double_to_int_80422da0@ha
+  lfd f9, double_to_int_80422da0@l(r10)
   
   slwi r10, r5, 2
   lwz r11, 0(r9)
@@ -333,8 +333,8 @@ static asm void do_src2(register _SND_CHORUS_SRCINFO* src) {
   stw r10, 0x18(sp);
   stw r10, 0x20(sp);
 
-  lis r10, i2fMagic @ha;
-  lfd f9, i2fMagic @l(r10);
+  lis r10, double_to_int_80422da0 @ha;
+  lfd f9, double_to_int_80422da0 @l(r10);
 
   // posHi * 4
   slwi r10, posHiV, 2;
