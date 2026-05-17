@@ -16,6 +16,11 @@
 extern void badgeShop_init(void);
 extern void yuugijou_init(void);
 extern void johoya_init(void);
+extern void marioSetCharMode(s32 mode);
+extern void statusWinForceUpdate(void);
+extern void partyLeft(MarioPartner partnerId);
+#define EVTDAT_GSW_BASE (170 * 1000000)
+#define GSW(id) ((id) - EVTDAT_GSW_BASE)
 
 extern GlobalWork* gp;
 
@@ -569,8 +574,8 @@ void stg0_00_init(void) {
 	yuugijou_init();
 	johoya_init();
 	gp->retraceLocalTime = 0;
-	//marioSetCharMode(0); mario.c
-	//statusWinForceUpdate(); statuswindow.c
+        marioSetCharMode(0);
+        statusWinForceUpdate();
 }
 
 void stg0_05_init(void) {
@@ -698,7 +703,7 @@ void stg1_19_init(void) {
 }
 
 void stg1_20_init(void) {
-	//marioSetCharMode(0); mario.c
+        marioSetCharMode(0);
 }
 
 void stg1_30_init00(void) {
@@ -776,8 +781,7 @@ void stg2_18_init00(void) {
 }
 
 void stg2_18_init01(void) {
-	swSet(0xB1F);
-	swSet(0xB21);
+	swSet(0xB3E);
 }
 
 void stg2_19_init(void) {
@@ -871,7 +875,7 @@ void stg2_25_02_init(void) {
 }
 
 void stg2_26_init(void) {
-	//marioSetCharMode(0); mario.c
+        marioSetCharMode(0);
 }
 
 void stg2_40_init(void) {
@@ -1155,27 +1159,17 @@ void stg3_20_12_init02(void) {
 }
 
 void stg3_20_13_init(void) {
-	int i;
-
-	for (i = 0; i < 19; i++) {
-		swSet(0x9B4 - i);
-	}
-	swByteSet(0x1FB, 20 - i);
-	swSet(0x977);
-	swSet(0x95A);
-	swSet(0x996);
-	pouchReceiveMail(14);
-	pouchOpenMail(14);
-}
-
-void stg3_20_14_init(void) {
 	swClear(0x996);
 }
 
-void stg3_20_15_init(void) {
+void stg3_20_14_init(void) {
 	pouchGetItem(kItemStorageKey_0x13);
 	pouchReceiveMail(15);
 	pouchOpenMail(15);
+}
+
+void stg3_20_15_init(void) {
+	pouchRemoveItem(kItemStorageKey_0x13);
 }
 
 void stg3_20_16_init(void) {
@@ -1245,7 +1239,7 @@ void stg3_34_init(void) {
 
 	swSet(0x962);
 	swSet(0x963);
-	//marioSetCharMode(0); mario.c
+	marioSetCharMode(0);
 	pouchRemoveItem(kItemChampsBelt);
 	for (i = 0; i < 20; i++) {
 		swClear(i + 0x9A1);
@@ -1308,13 +1302,10 @@ void stg4_10_init(void) {
 }
 
 void stg4_11_init(void) {
-	/*
-	mario_party.c
 	partyLeft(PARTNER_GOOMBELLA);
 	partyLeft(PARTNER_KOOPS);
 	partyLeft(PARTNER_FLURRIE);
 	partyLeft(PARTNER_YOSHI);
-	*/
 }
 
 void stg4_13_init(void) {
@@ -1351,7 +1342,7 @@ void stg4_15_03_init(void) {
 }
 
 void stg4_16_init(void) {
-	//marioSetCharMode(0); mario.c
+        marioSetCharMode(0);
 }
 
 void stg4_30_init(void) {
@@ -1386,7 +1377,7 @@ void stg5_15_init00(void) {
 }
 
 void stg5_15_init01(void) {
-	swSet(0xC39);
+	swSet(0xC3B);
 }
 
 void stg5_17_init(void) {
@@ -1456,9 +1447,7 @@ void stg5_30_init00(void) {
 }
 
 void stg5_30_init01(void) {
-	swSet(0xBA7);
-	swSet(0xBA8);
-	swSet(0xBB0);
+	swSet(0xBA6);
 }
 
 void stg5_43_init(void) {
@@ -1473,7 +1462,7 @@ void stg5_47_init(void) {
 }
 
 void stg5_58_init(void) {
-	//marioSetCharMode(0); mario.c
+        marioSetCharMode(0);
 }
 
 void stg5_59_01_init(void) {
@@ -1626,7 +1615,7 @@ void stg6_54_init(void) {
 }
 
 void stg6_56_init(void) {
-	//marioSetCharMode(0); mario.c
+        marioSetCharMode(0);
 }
 
 void stg6_70_init(void) {
@@ -1650,7 +1639,8 @@ void stg6_end_init00(void) {
 }
 
 void stg6_end_init01(void) {
-	swSet(0x53C);
+	pouchGetItem(kItemUltraHammer);
+	swSet(0x4AB);
 }
 
 void stg7_01_init(void) {

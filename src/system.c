@@ -1047,7 +1047,7 @@ f32 sysMsec2FrameFloat(f32 msec) {
 	return (msec * 60.0f) / 1000.0f;
 }
 
-void mtxGetRotationElement(Mtx arg0, Mtx arg1, char arg2, char arg3) { //1:1
+void mtxGetRotationElement(Mtx arg0, Mtx arg1, signed char arg2, signed char arg3) { //1:1
     Vec vecX, vecY, vecZ;
     switch (arg2) {
     case 'x':

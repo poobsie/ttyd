@@ -1,5 +1,6 @@
 #include "eff/eff_scanning.h"
 #include "driver/animdrv.h"
+#include "driver/camdrv.h"
 #include "driver/dispdrv.h"
 #include "mario/mariost.h"
 #include "memory.h"
@@ -19,12 +20,12 @@ typedef struct effScanningData {
 
 void effScanningMain(EffectEntry* effect);
 void effScanningDisp(CameraId camId, void* param);
+void animPoseDrawMtx(s32 poseId, Mtx matrix, s32 xluMode, f32 rotY, f32 scale);
 
 EffectEntry* effScanningEntry(s32 int2, f32 float3, f32 float4, f32 float5) {
 	EffectEntry* entry;
 	effScanningData* data;
-	
-	
+
 	entry = effEntry();
 	entry->type = "Scanning";
 	entry->count = 1;
@@ -48,27 +49,29 @@ EffectEntry* effScanningEntry(s32 int2, f32 float3, f32 float4, f32 float5) {
 
 void effScanningMain(EffectEntry* effect) {
 	BOOL inBattle;
-	Vec disp = { 0 }; //loads Vec from .rodata before being overwritten
-	effScanningData* data = effect->userdata;
-	disp.x = data->position.x;
-	disp.y = data->position.y;
-	disp.z = data->position.z;
+	effScanningData* data;
+	Vec disp;
+	Vec pos = { 0.0f, 0.0f, 0.0f };
+	data = effect->userdata;
+	pos.x = data->position.x;
+	pos.y = data->position.y;
+	pos.z = data->position.z;
+	disp = pos;
 
 	inBattle = gp->inBattle != 0;
 
-	if (effect->flags & 4) { //soft delete
+	if (effect->flags & 4) {
 		effect->flags &= ~4;
 		if (data->animId != -1) {
 			animPoseRelease(data->animId);
 		}
 		effDelete(effect);
-	}
-	else {
+	} else {
 		switch (data->field_0x18) {
 		case 0:
-			/*if (!animGroupBaseAsync("EFF_Scan", inBattle, 0)) {
+			if (!animGroupBaseAsync("EFF_Scan", inBattle, 0)) {
 				return;
-			}*/
+			}
 			data->animId = animPoseEntry("EFF_Scan", (u32)inBattle);
 			animPoseSetAnim(data->animId, "Z_1", 1);
 			data->field_0x18++;
@@ -86,5 +89,24 @@ void effScanningMain(EffectEntry* effect) {
 }
 
 void effScanningDisp(CameraId camId, void* param) {
+	Mtx mtxT, mtxS, mtxR;
+	EffectEntry* entry = (EffectEntry*)param;
+	effScanningData* data = (effScanningData*)entry->userdata;
 
+	if (data->animId == -1) {
+		return;
+	}
+
+	PSMTXTrans(mtxT, data->position.x, data->position.y, data->position.z);
+	PSMTXScale(mtxS, data->field_0x10, data->field_0x10, data->field_0x10);
+
+	PSMTXRotRad(mtxR, 'y', -camGetPtr(camId)->viewYaw * 0.01745329238474369f);
+
+	PSMTXConcat(mtxT, mtxR, mtxT);
+	PSMTXConcat(mtxT, mtxS, mtxT);
+
+	animPoseMain(data->animId);
+	animPoseDrawMtx(data->animId, mtxT, 1, 0.0f, 10.0f);
+	animPoseDrawMtx(data->animId, mtxT, 2, 0.0f, 10.0f);
+	animPoseDrawMtx(data->animId, mtxT, 3, 0.0f, 10.0f);
 }

@@ -727,7 +727,8 @@ BattleUnitType* battle_monosiri_same_tbl[] = {
 	same_tbl_magunum_battender,
 	same_tbl_magunum_battender_mkii,
 	same_tbl_moamoa,
-	same_tbl_iron_sinemon
+	same_tbl_iron_sinemon,
+	NULL
 };
 
 TattleEntry* battleGetUnitMonosiriPtr(s32 id) {

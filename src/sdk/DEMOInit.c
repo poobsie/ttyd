@@ -14,7 +14,7 @@ void* DemoFrameBuffer1;
 void* DemoFrameBuffer2;
 void* DemoCurrentBuffer;
 static BOOL GPHangWorkaround = FALSE;
-extern BOOL DemoStatEnable;
+extern u8 DemoStatEnable;
 static GXBool DemoFirstFrame = GX_TRUE;
 
 static u32 FrameMissThreshold;
